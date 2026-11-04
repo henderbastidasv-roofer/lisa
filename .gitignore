@@ -1,0 +1,12 @@
+node_modules/
+.vercel/
+.env
+.env.*
+!.env.ejemplo
+
+# Lo de cada compañía se queda en su computadora: nunca se sube a GitHub
+negocio/*
+!negocio/plantilla.md
+conocimiento/privado/*
+!conocimiento/privado/LEEME.md
+google/Lisa-listo.gs

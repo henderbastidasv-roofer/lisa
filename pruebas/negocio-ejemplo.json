@@ -1,0 +1,22 @@
+{
+  "NOMBRE_AGENTE": "Lisa",
+  "COMPANIA": "Techos Ejemplo LLC",
+  "DUENO": "Carlos Pérez",
+  "CIUDAD": "Houston",
+  "ESTADO": "Texas",
+  "ZONA_SERVICIO": "50 millas alrededor de Houston (Katy, Cypress, Spring, Sugar Land, Pearland y alrededores)",
+  "ZIPS": "770, 773, 774, 775",
+  "SERVICIOS": "reemplazo de techos, reparaciones de cualquier tamaño, reclamos de aseguranza por granizo y viento, gutters, y quitar y volver a poner paneles solares",
+  "HORARIO_INSPECCIONES": "de lunes a sábado, de 9 de la mañana a 5 de la tarde",
+  "AGENDA_DIAS": "1,2,3,4,5,6",
+  "AGENDA_DESDE": "09:00",
+  "AGENDA_HASTA": "17:00",
+  "AGENDA_DURACION": 60,
+  "ZONA_HORARIA": "America/Chicago",
+  "CONTACTO_HUMANO": "Carlos, al 832 555 0199",
+  "TELEFONO_TRANSFERIR": "",
+  "CORREOS_EQUIPO": "equipo@techosejemplo.com",
+  "PAGINA_WEB": "techosejemplo.com",
+  "IDIOMAS": "español e inglés",
+  "IDIOMA_SALUDO": "es"
+}

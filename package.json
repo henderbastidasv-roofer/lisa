@@ -1,0 +1,31 @@
+{
+  "name": "lisa",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lisa: el agente de llamadas para compañías de techos. Hecho por Rufero Pro para ConstruIA.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "claves": "node scripts/claves.mjs",
+    "simular": "node --import tsx scripts/simular.mjs",
+    "pruebas": "node --import tsx scripts/simular.mjs --casos",
+    "google": "node scripts/google.mjs",
+    "publicar": "node scripts/publicar.mjs",
+    "agente": "node scripts/agente.mjs",
+    "numero": "node scripts/numero.mjs",
+    "revisar": "node scripts/revisar.mjs",
+    "test": "node --import tsx --test pruebas/agenda.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "retell-sdk": "^6.2.0"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^1.4.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

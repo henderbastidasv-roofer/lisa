@@ -1,0 +1,8 @@
+# Vercel solo necesita el código (api/ y lib/). El prompt vive en Retell.
+negocio/
+conocimiento/
+lisa/
+pruebas/
+scripts/
+google/
+.env*
