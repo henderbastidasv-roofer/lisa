@@ -16,6 +16,13 @@ const SECRETO = "__SECRETO__";
 const CORREOS = "__CORREOS__"; // separados por coma
 const CALENDARIO = "__CALENDARIO__"; // "primary" = el calendario principal de esta cuenta
 
+// PRIMERO: deja escogida esta función arriba, junto a ▶ Ejecutar (Run), y tócalo una vez para dar los permisos.
+// Está de primera para que Google la escoja sola. No ejecutes doPost: esa la usa Lisa desde internet.
+function darPermisos() {
+  Logger.log("Calendario: " + calendario_().getName());
+  Logger.log("Correos que quedan hoy: " + MailApp.getRemainingDailyQuota());
+}
+
 function calendario_() {
   return CALENDARIO === "primary" ? CalendarApp.getDefaultCalendar() : CalendarApp.getCalendarById(CALENDARIO);
 }
@@ -117,10 +124,4 @@ function doPost(e) {
 // Si abres el link en el navegador, te dice que está despierto (sin mostrar nada de tu calendario).
 function doGet() {
   return ContentService.createTextOutput("Lisa: el puente con Google está despierto.");
-}
-
-// Corre esta función una vez desde el editor (botón ▶ Ejecutar) para dar los permisos.
-function darPermisos() {
-  Logger.log("Calendario: " + calendario_().getName());
-  Logger.log("Correos que quedan hoy: " + MailApp.getRemainingDailyQuota());
 }

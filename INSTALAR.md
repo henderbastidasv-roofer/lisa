@@ -4,6 +4,7 @@ Esta guía la sigue **Claude Code**, no la persona. La persona es dueña o traba
 
 ## Cómo trabajas con la persona
 - **Háblale en español** (o en inglés si te escribe en inglés), con palabras simples. Nada de jerga de programación. Si tienes que usar una palabra técnica, explícala en una línea.
+- **Las páginas pueden salirle en inglés o en español** (Google, Retell y Vercel usan el idioma de su cuenta). Cada vez que le digas un botón o un menú, dale los dos nombres: "**Implementar → Administrar implementaciones** (*Deploy → Manage deployments*)". Si te dice que no lo encuentra, pídele un pantallazo.
 - **Una cosa a la vez.** Dale un paso, espera a que te diga que lo hizo y sigue. No le sueltes listas de 10 pasos.
 - **Tú corres los comandos.** La persona solo abre páginas, se registra, hace clic y escribe sus claves cuando un script se las pide.
 - **Las claves nunca se pegan en el chat.** Si la persona pega una clave en el chat, dile que la borre y que la cree de nuevo en esa página, porque ya quedó expuesta. Las claves solo se escriben en la Terminal, cuando `npm run claves` las pide (se ven como ****).
@@ -26,6 +27,8 @@ Esta guía la sigue **Claude Code**, no la persona. La persona es dueña o traba
    **Si todavía no quiere número, puede hacer todo menos la fase 5:** Lisa queda lista y la puede oír desde el navegador; el número se conecta otro día.
 
 ## Fase 1: la entrevista
+**Hay dos idiomas distintos, y no se mezclan:** el idioma en que tú le hablas a la persona (el de este chat) y el idioma en que Lisa les contesta a sus clientes (`IDIOMA_SALUDO`). Si la persona te pide "contesta en inglés", pregúntale cuál de los dos quiere decir antes de cambiar nada. Cuando llegues a `IDIOMA_SALUDO`, aclárale que es para los clientes y que tú le sigues hablando igual.
+
 Haz estas preguntas **una por una** y guarda las respuestas en `negocio/datos.json`. Las claves del JSON son exactamente estas (mira `pruebas/negocio-ejemplo.json`, la compañía de ejemplo "Techos Ejemplo LLC"):
 
 | Clave | Pregunta | Ejemplo |
@@ -48,7 +51,8 @@ Haz estas preguntas **una por una** y guarda las respuestas en `negocio/datos.js
 | `CALENDARIO` | ¿En qué calendario de Google van las citas? Si es el principal de su cuenta: `primary`. | primary |
 | `PAGINA_WEB` | ¿Tienes página web? (si no: "no tenemos página web") | techosejemplo.com |
 | `IDIOMAS` | ¿En qué idiomas atienden? | español e inglés |
-| `IDIOMA_SALUDO` | ¿Lisa contesta en español (`es`) o en inglés (`en`)? Cambia sola al idioma del cliente. | es |
+| `IDIOMA_SALUDO` | Cuando un cliente llame, ¿Lisa lo saluda en español (`es`) o en inglés (`en`)? Si el cliente habla el otro idioma, Lisa se cambia sola. (Esto es para tus clientes; yo te sigo hablando como hasta ahora.) | es |
+| `PALABRAS_CLAVE` | Opcional: calles, subdivisiones o ciudades que se oyen mucho en sus llamadas, separadas por coma. Lisa las entiende mejor por teléfono. Las ciudades de `ZONA_SERVICIO` ya van solas. | Wortham Center Dr, Bridgeland, Towne Lake |
 
 Después pregúntale, también una por una, lo que hace distinta a su compañía. Guárdalo en `negocio/compania.md` con sus propias palabras, usando `negocio/plantilla.md` como guía:
 - desde cuándo trabajan y por qué el cliente confía en ellos;
@@ -84,17 +88,23 @@ Ve una por una.
 
 1. **Retell** (la voz y el teléfono de Lisa): **dashboard.retellai.com** → registrarse.
    - Retell regala unos $10 de saldo al empezar. Explícale que cada minuto de llamada cuesta unos **10 centavos** (voz, cerebro y teléfono) y el número **$2 al mes**.
-   - Que agregue un método de pago en *Billing* y **prenda la recarga automática** (*auto-recharge*), con un tope. **Sin saldo, Lisa no contesta:** es lo que más nos ha pasado.
-   - La clave: *Settings → API Keys*. Que use la que tiene la etiqueta **webhook**.
+   - Que agregue una tarjeta en *Billing* y **prenda la recarga automática** (*auto-recharge*), con un tope. **Sin saldo, Lisa no contesta:** es lo que más nos ha pasado. La tarjeta también hace falta para comprar el número en la fase 5.
+   - La clave: *Settings → API Keys*. **Tiene que ser la que tiene la etiqueta "webhook" al lado**, no otra ni una nueva. Díselo antes de que copie, y pídele que te confirme que la que copió dice "webhook".
+     - Por qué: Retell firma sus pedidos a Lisa solo con esa clave. Con otra, Lisa contesta el teléfono pero no ve la agenda ni deja avisos, y termina dándole al cliente el contacto del equipo. Nos pasó en la primera instalación real.
    - Que ella corra `npm run claves -- RETELL_API_KEY` y la pegue.
 2. **Google Calendar y Gmail** (donde Lisa ve la agenda, pone las citas y manda los avisos). No hace falta Google Cloud: es un script dentro de su propia cuenta de Google.
-   - Corre `npm run google`. Crea el código del script con su clave secreta y sus correos, y lo deja copiado.
-   - Que entre a **script.google.com** con la cuenta de Google del calendario de la compañía → **Nuevo proyecto**.
+   - Corre `npm run google`. Crea el código del script con su clave secreta y sus correos (`google/Lisa-listo.gs`).
+   - Que entre a **script.google.com** con la cuenta de Google del calendario de la compañía → **Nuevo proyecto** (*New project*).
+   - **Justo antes de que pegue**, cuando ya tenga el editor abierto, corre `npm run google -- copiar`. Debe decir ✅ "Ya quedó copiado y lo comprobé". Si sale ⚠️, ábrele `google/Lisa-listo.gs` para que lo copie a mano (Ctrl+A, Ctrl+C). Dile que no copie nada más entre ese momento y el pegado.
    - Que borre lo que hay en el editor, pegue (Ctrl+V o Cmd+V) y guarde (el ícono del disquete). Que le ponga de nombre "Lisa".
-   - Que escoja la función **darPermisos** arriba y toque **▶ Ejecutar**. Google le va a pedir permisos: *Revisar permisos* → su cuenta → si sale "Google no verificó esta app", *Configuración avanzada* → *Ir a Lisa (no seguro)* → *Permitir*. Explícale que sale ese aviso porque el script es suyo y no está publicado en una tienda; solo lo usa ella.
-   - Que toque **Implementar → Nueva implementación** → el engrane → **Aplicación web**. *Ejecutar como*: **Yo**. *Quién tiene acceso*: **Cualquier usuario**. → **Implementar**.
-   - Que copie la **URL de la aplicación web** (termina en `/exec`) y corra `npm run claves -- GOOGLE_SCRIPT_URL` para pegarla.
-   - Corre `npm run google -- probar`. Debe decir ✅ con el nombre de su calendario.
+   - **Arriba, junto a ▶ Ejecutar (*Run*), hay una lista con el nombre de una función. Tiene que decir `darPermisos`.** Normalmente ya sale así, porque es la primera del archivo. Si dice `doPost` u otra, que la cambie a `darPermisos`. Después que toque **▶ Ejecutar (*Run*)**.
+   - Google le va a pedir permisos: *Revisar permisos* (*Review permissions*) → su cuenta → si sale "Google no verificó esta app" (*Google hasn't verified this app*), *Configuración avanzada* (*Advanced*) → *Ir a Lisa (no seguro)* (*Go to Lisa (unsafe)*) → *Permitir* (*Allow*). Explícale que sale ese aviso porque el script es suyo y no está publicado en una tienda; solo lo usa ella.
+   - Que toque **Implementar → Nueva implementación** (*Deploy → New deployment*) → el engrane → **Aplicación web** (*Web app*).
+     - *Ejecutar como* (*Execute as*): **Yo** (*Me*).
+     - *Quién tiene acceso* (*Who has access*): **Cualquier usuario** (*Anyone*). No "Cualquier usuario con una cuenta de Google" (*Anyone with Google account*) ni "Solo yo" (*Only myself*). **Pídele que te confirme qué dice antes de tocar Implementar.**
+     - → **Implementar** (*Deploy*).
+   - Que copie la **URL de la aplicación web** (*Web app URL*, termina en `/exec`) y corra `npm run claves -- GOOGLE_SCRIPT_URL` para pegarla.
+   - Corre `npm run google -- probar`. Debe decir ✅ con el nombre de su calendario. Si no, el mensaje dice qué revisar. Lo más común es *Quién tiene acceso*, y se arregla sin cambiar la URL: *Implementar → Administrar implementaciones* (*Deploy → Manage deployments*) → el lápiz → *Cualquier usuario* (*Anyone*) → *Implementar* (*Deploy*).
    - Explícale: "Cualquier usuario" quiere decir que Lisa le puede hablar desde internet, pero sin la clave secreta el script no hace nada.
    - Lisa bloquea las horas que estén **Ocupado** en ese calendario. Lo que esté como **Disponible** no bloquea.
 3. **Vercel** (donde viven las herramientas de Lisa): vercel.com → *Sign up*.
@@ -106,6 +116,7 @@ Ve una por una.
 2. Abre `<dirección>/api/salud` en el navegador. Debe decir "Lisa está despierta y conectada con Google."
 3. `npm run agente`: crea a Lisa en Retell con su guion, su voz (por defecto Cleo, que suena bien en inglés y en español) y sus herramientas, y publica la versión. Esto no cuesta.
 4. **Oír a Lisa sin número (modo sin número):** en dashboard.retellai.com → *Agents* → su agente → **Test** (llamada desde el navegador, con el micrófono). **Antes, dile que cuesta lo mismo que una llamada, unos 10 centavos por minuto**, y espera su sí. Que le pida una inspección como si fuera un cliente: la cita se crea **de verdad** en su calendario y el aviso le llega a su correo. Después la borra.
+   - **Después de esa prueba, corre `npm run revisar`.** Revisa la llamada en Retell y dice si las herramientas contestaron bien. Si sale "Vercel las rechazó", la clave de Retell no es la de webhook: que copie la que dice "webhook", `npm run claves -- RETELL_API_KEY` y `npm run publicar`. **No sigas a la fase 5 hasta que salga ✅.**
    - Si no le gusta la voz, que escoja otra en *Voices* (que la oiga en inglés y en español), guarda su nombre en `.env.local` como `LISA_VOZ` y vuelve a correr `npm run agente`.
 5. **Pregúntale si quiere el número ahora.**
    - Si sí, sigue con la fase 5.
@@ -115,6 +126,10 @@ Ve una por una.
 **Lee esto con la persona antes de tocar nada:**
 - Lisa contesta en un **número de Retell** (cuesta $2 al mes). No hace falta Twilio.
 - **Su número de siempre no se mueve ni se pierde.** Si quiere que Lisa conteste las llamadas que llegan a ese número, se usa el **desvío de llamadas** de su compañía de teléfono, y lo puede quitar cuando quiera.
+- **Para comprar un número, Retell pide dos cosas antes.** Díselas para que las tenga a la mano:
+  - una tarjeta en *Billing*;
+  - **verificar su identidad**: le pide una foto de su licencia de manejar (o identificación) y una selfie, casi siempre desde el celular con un código QR. Toma unos minutos.
+  Si Retell todavía no la ha verificado, la compra falla. Que lo haga en el dashboard y después sigues.
 
 1. Pregúntale de qué código de área quiere el número (por ejemplo, 832). Dile: "Esto compra un número de $2 al mes". Con su sí, corre `npm run numero -- comprar <código> --si`.
    - Si ya compró un número en el dashboard de Retell: `npm run numero -- conectar +1XXXXXXXXXX`.
@@ -142,10 +157,13 @@ Explícale lo que tiene que saber del día a día:
 - **Si Lisa no contesta:** abrir Claude Code en esta carpeta y decir "Lisa no contesta, revisa qué pasa". Revisa el saldo de Retell, `<dirección>/api/salud`, `npm run revisar` y `npx vercel logs <dirección>`.
 
 ## Si algo falla
-- **Lisa contesta pero dice que no puede ver la agenda:** el script de Google no responde. Corre `npm run google -- probar`. Si cambió el código del script, hay que volver a implementar: *Implementar → Administrar implementaciones → editar → Nueva versión*. La URL no cambia.
+- **Lisa contesta pero no puede ver la agenda ni dejar avisos (le da al cliente el contacto del equipo):** primero corre `npm run revisar`. Si dice que Vercel rechazó las herramientas, es la clave de Retell (ver "firma inválida", abajo). Si no, es el script de Google: corre `npm run google -- probar`. Si cambió el código del script, hay que volver a implementar: *Implementar → Administrar implementaciones → editar → Nueva versión*. La URL no cambia.
+- **Google dice "No tienes permiso" o pide iniciar sesión:** dos causas. (1) *Quién tiene acceso* no quedó en *Cualquier usuario* (*Anyone*): *Implementar → Administrar implementaciones* (*Deploy → Manage deployments*) → lápiz → *Anyone*. (2) Se tocó ▶ Ejecutar con `doPost` escogida arriba en vez de `darPermisos`: que escoja `darPermisos` y lo ejecute otra vez.
 - **"clave incorrecta" en Google:** el código pegado es viejo. `npm run google`, pegar otra vez, guardar y volver a implementar.
 - **`/api/salud` dice que faltan claves:** corre `npm run publicar` otra vez.
 - **Las herramientas dicen "firma inválida" en los logs de Vercel:** la `RETELL_API_KEY` no es la de la etiqueta webhook. Cámbiala con `npm run claves -- RETELL_API_KEY` y corre `npm run publicar`.
 - **`npm run agente` da un error de Retell:** lee el mensaje; casi siempre es un campo que Retell cambió. Revisa la documentación en docs.retellai.com y ajusta `scripts/agente.mjs`.
 - **No llega el correo de los avisos:** que revise la carpeta de spam y que `CORREOS_EQUIPO` esté bien. Gmail permite unos 100 correos al día desde un script en una cuenta gratis.
+- **Lisa entiende mal las direcciones:** agrega las calles o subdivisiones que más salen a `PALABRAS_CLAVE` en `negocio/datos.json` y corre `npm run agente`. El oído ya va en modo preciso (`stt_mode: accurate`). Si la ves lenta para contestar, prueba `LISA_OIDO="fast"` en `.env.local`.
+- **No deja comprar el número:** falta la tarjeta en *Billing* o la verificación de identidad de Retell (licencia y selfie desde el celular).
 - **Lisa se corta al principio:** sube `begin_message_delay_ms` en `scripts/agente.mjs` y corre `npm run agente`.

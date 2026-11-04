@@ -13,7 +13,10 @@ const CLAVES = [
   {
     nombre: "RETELL_API_KEY",
     oculto: true,
-    ayuda: "Clave de Retell: dashboard.retellai.com → Settings → API Keys. Usa la que tiene la etiqueta 'webhook' (empieza con key_).",
+    ayuda:
+      "Clave de Retell: dashboard.retellai.com → Settings → API Keys.\n" +
+      "⚠️  Copia la que tiene la etiqueta 'webhook' al lado (empieza con key_). Con otra clave Lisa contesta,\n" +
+      "   pero no ve la agenda ni deja avisos, porque Retell firma sus pedidos solo con la de webhook.",
     valida: (v) => v.length > 20,
   },
   {

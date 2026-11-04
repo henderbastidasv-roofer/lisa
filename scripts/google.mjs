@@ -1,5 +1,6 @@
 // Prepara el puente con Google Calendar y Gmail.
 //   npm run google            → crea google/Lisa-listo.gs con tu clave y tus correos, y lo copia al portapapeles
+//   npm run google -- copiar  → lo vuelve a copiar (córrelo justo antes de que la persona pegue)
 //   npm run google -- probar  → revisa que el script conteste (sin crear nada en tu calendario)
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -9,6 +10,48 @@ import { RAIZ, guardarEnv, leerEnv } from "./_util.mjs";
 import { leerDatos, rutaDatos, esEjemplo } from "./armar-prompt.mjs";
 
 const vars = leerEnv();
+const LISTO = path.join(RAIZ, "google", "Lisa-listo.gs");
+
+const normal = (t) => String(t).replace(/\r\n/g, "\n").trim();
+
+/** Copia el archivo al portapapeles y comprueba que de verdad quedó copiado. */
+function copiarAlPortapapeles(archivo) {
+  const codigo = fs.readFileSync(archivo, "utf8");
+  let copio, leer;
+  if (process.platform === "win32") {
+    // PowerShell guarda bien los acentos (clip.exe los daña) y deja leer lo copiado para comprobarlo.
+    const ps = (cmd) => spawnSync("powershell.exe", ["-NoProfile", "-Command", cmd], { encoding: "utf8" });
+    const ruta = archivo.replace(/'/g, "''");
+    copio = ps(`Set-Clipboard -Value (Get-Content -Raw -Encoding UTF8 -LiteralPath '${ruta}')`);
+    leer = () => ps("[Console]::OutputEncoding = [Text.Encoding]::UTF8; Get-Clipboard -Raw").stdout || "";
+  } else if (process.platform === "darwin") {
+    copio = spawnSync("pbcopy", [], { input: codigo });
+    leer = () => spawnSync("pbpaste", [], { encoding: "utf8" }).stdout || "";
+  } else {
+    copio = spawnSync("xclip", ["-selection", "clipboard"], { input: codigo });
+    leer = () => spawnSync("xclip", ["-selection", "clipboard", "-o"], { encoding: "utf8" }).stdout || "";
+  }
+  if (copio.error || copio.status !== 0) return false;
+  return normal(leer()) === normal(codigo);
+}
+
+function avisarCopia(ok) {
+  if (ok) {
+    console.log("✅ Ya quedó copiado y lo comprobé: solo tiene que pegarlo (Ctrl+V o Cmd+V) en script.google.com.");
+    console.log("   Que no copie nada más antes de pegar. Si copia otra cosa, corre: npm run google -- copiar\n");
+  } else {
+    console.log(`⚠️  No pude copiarlo al portapapeles. Abre ${path.relative(RAIZ, LISTO)}, selecciona todo (Ctrl+A), cópialo (Ctrl+C) y pégalo en script.google.com.\n`);
+  }
+}
+
+if (process.argv.includes("copiar")) {
+  if (!fs.existsSync(LISTO)) {
+    console.error("\nTodavía no existe google/Lisa-listo.gs. Corre primero: npm run google\n");
+    process.exit(1);
+  }
+  avisarCopia(copiarAlPortapapeles(LISTO));
+  process.exit(0);
+}
 
 if (process.argv.includes("probar")) {
   if (!vars.GOOGLE_SCRIPT_URL) {
@@ -26,8 +69,12 @@ if (process.argv.includes("probar")) {
   try {
     j = JSON.parse(texto);
   } catch {
-    console.error("\nGoogle no contestó como esperaba. Lo más común:");
-    console.error("- En 'Quién tiene acceso' no quedó 'Cualquier usuario'.");
+    const pideEntrar = /accounts\.google\.com|ServiceLogin|<html/i.test(texto) || r.status === 401 || r.status === 403;
+    console.error("\nGoogle no contestó como esperaba.");
+    if (pideEntrar) console.error("Google no deja entrar a Lisa (contesta con una página para iniciar sesión o de permisos). Lo más común:");
+    console.error("- En 'Quién tiene acceso' (Who has access) no quedó 'Cualquier usuario' (Anyone).");
+    console.error("  Se arregla en Implementar → Administrar implementaciones (Deploy → Manage deployments) → el lápiz → Cualquier usuario (Anyone) → Implementar (Deploy).");
+    console.error("- No se tocó ▶ Ejecutar (Run) con la función darPermisos escogida arriba, así que Google no tiene los permisos.");
     console.error("- Se pegó el link del editor y no el de la aplicación web (el bueno termina en /exec).");
     console.error(`Respuesta (${r.status}): ${texto.slice(0, 200)}\n`);
     process.exit(1);
@@ -61,11 +108,8 @@ const codigo = fs
   .replace("__SECRETO__", vars.LISA_SECRETO_GOOGLE)
   .replace("__CORREOS__", correos.join(","))
   .replace("__CALENDARIO__", datos.CALENDARIO || "primary");
-const listo = path.join(RAIZ, "google", "Lisa-listo.gs");
-fs.writeFileSync(listo, codigo, { mode: 0o600 });
+fs.writeFileSync(LISTO, codigo, { mode: 0o600 });
 
-const copiar = process.platform === "win32" ? ["clip"] : process.platform === "darwin" ? ["pbcopy"] : ["xclip", "-selection", "clipboard"];
-const r = spawnSync(copiar[0], copiar.slice(1), { input: codigo, shell: process.platform === "win32" });
-console.log(`\nListo: el código de tu script está en ${path.relative(RAIZ, listo)} (no se sube a GitHub, tiene tu clave).`);
-console.log(r.status === 0 ? "Ya quedó copiado: solo tienes que pegarlo (Ctrl+V o Cmd+V) en script.google.com.\n" : "Ábrelo, copia todo y pégalo en script.google.com.\n");
+console.log(`\nListo: el código de tu script está en ${path.relative(RAIZ, LISTO)} (no se sube a GitHub, tiene tu clave).`);
 console.log(`Los avisos le van a llegar a: ${correos.join(", ")}\n`);
+avisarCopia(copiarAlPortapapeles(LISTO));

@@ -40,11 +40,25 @@ const cerebro = {
   }),
 };
 
+/** La ciudad, las ciudades de la zona y los nombres de la compañía y del agente, para que el oído de Retell los espere. */
+function palabrasDeLaZona(d) {
+  const zona = String(d.ZONA_SERVICIO || "").match(/\(([^)]*)\)/)?.[1] || "";
+  const sueltas = [d.CIUDAD, d.COMPANIA, d.NOMBRE_AGENTE, ...zona.split(/,| y | and /), ...String(d.PALABRAS_CLAVE || "").split(",")];
+  const limpias = sueltas
+    .map((p) => String(p || "").replace(/\b(y )?alrededores\b|\.\.\./gi, "").trim())
+    .filter((p) => p.length > 2);
+  return [...new Set(limpias)].slice(0, 100);
+}
+
 const voz = {
   agent_name: `${datos.NOMBRE_AGENTE} · ${datos.COMPANIA}`,
   voice_id: vars.LISA_VOZ || "cartesia-Cleo",
   ...(vars.LISA_VOZ ? {} : { voice_model: "sonic-3.6" }),
   language: ["en-US", "es-419"],
+  // Las direcciones se oían mal por teléfono (en la primera llamada real, "Wortham" salió "Wharton" y el número de la casa
+  // tomó 4 intentos). Modo preciso del oído y las ciudades de la zona como palabras que debe esperar.
+  stt_mode: vars.LISA_OIDO || "accurate",
+  boosted_keywords: palabrasDeLaZona(datos),
   timezone: datos.ZONA_HORARIA || "America/Chicago",
   // Una pausa corta antes del saludo: sin ella se corta el principio (nos pasó con Sofía).
   begin_message_delay_ms: 800,

@@ -35,11 +35,19 @@ if (accion === "comprar") {
     process.exit(1);
   }
   const datos = leerDatos(rutaDatos());
-  const n = await retell("POST", "/create-phone-number", {
-    area_code: area,
-    nickname: `${datos.NOMBRE_AGENTE} · ${datos.COMPANIA}`,
-    ...aLisa,
-  });
+  let n;
+  try {
+    n = await retell("POST", "/create-phone-number", {
+      area_code: area,
+      nickname: `${datos.NOMBRE_AGENTE} · ${datos.COMPANIA}`,
+      ...aLisa,
+    });
+  } catch (e) {
+    console.error(`\nNo se pudo comprar el número. ${e.message}`);
+    console.error("Lo más común: falta una tarjeta en Billing o la verificación de identidad de Retell");
+    console.error("(licencia y selfie desde el celular, en dashboard.retellai.com). También puede que no haya números con ese código: prueba otro.\n");
+    process.exit(1);
+  }
   vars.RETELL_NUMERO = n.phone_number;
   guardarEnv(vars);
   console.log(`\n✅ Número comprado y conectado a Lisa: ${n.phone_number_pretty ?? n.phone_number}`);
