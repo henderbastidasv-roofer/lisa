@@ -10,7 +10,7 @@ Agente de llamadas para compañías de techos, de Rufero Pro y ConstruIA. Contes
 - Cambiar el código (`api/`, `lib/`): `npm test`, `npm run typecheck` y después `npm run publicar`.
 
 ## Cómo está hecha
-- **Retell** pone la voz, el oído, el cerebro (Claude Haiku 4.5, temperatura 0.15) y el número. El guion vive en Retell: `npm run agente` lo arma (`scripts/armar-prompt.mjs`) y publica una versión nueva. Los números apuntan a `latest_published`.
+- **Retell** pone la voz, el oído, el cerebro (Claude Haiku 5.5, temperatura 0.15) y el número. El guion vive en Retell: `npm run agente` lo arma (`scripts/armar-prompt.mjs`) y publica una versión nueva. Los números apuntan a `latest_published`.
 - **Vercel** tiene dos funciones:
   - `api/herramientas.ts`: Retell la llama en medio de la llamada (`ver_horarios`, `agendar_inspeccion`, `avisar_equipo`). Revisa la firma `X-Retell-Signature`.
   - `api/retell.ts`: el aviso de fin de llamada (`call_analyzed`). Si alguien habló y no quedó ni con cita, ni transferido, ni con aviso entregado, deja un "Llamar de vuelta". Si no, manda el resumen por correo.

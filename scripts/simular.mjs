@@ -19,8 +19,8 @@ if (!vars.ANTHROPIC_API_KEY) {
   console.error("\nFalta ANTHROPIC_API_KEY. Corre primero: npm run claves -- ANTHROPIC_API_KEY\n");
   process.exit(1);
 }
-// El mismo modelo que usa Lisa en Retell (claude-4.5-haiku), para que la prueba se parezca a la llamada.
-const MODELO = vars.LISA_MODELO_SIMULADOR || "claude-haiku-4-5";
+// El mismo modelo que usa Lisa en Retell (claude-5.5-haiku), para que la prueba se parezca a la llamada.
+const MODELO = vars.LISA_MODELO_SIMULADOR || "claude-haiku-5-5";
 const REVISOR = vars.LISA_MODELO_REVISOR || "claude-sonnet-5-5";
 const claude = new Anthropic({ apiKey: vars.ANTHROPIC_API_KEY });
 
@@ -76,7 +76,6 @@ async function turno(ll, dice, google) {
     const r = await claude.messages.create({
       model: MODELO,
       max_tokens: 600,
-      temperature: 0.15,
       system: [{ type: "text", text: ll.system, cache_control: { type: "ephemeral" } }],
       messages: ll.mensajes,
       tools: herramientas,
@@ -108,7 +107,7 @@ async function turno(ll, dice, google) {
           google,
         });
       }
-      ll.acciones.push(`[Usó ${u.name} ${JSON.stringify(u.input)} → ${salida.split("\n")[0]}]`);
+      ll.acciones.push(`[Usó ${u.name} ${JSON.stringify(u.input)} → ${salida.replace(/\s*\n\s*/g, " ").slice(0, 500)}]`);
       resultados.push({ type: "tool_result", tool_use_id: u.id, content: salida });
     }
     ll.mensajes.push({ role: "user", content: resultados });

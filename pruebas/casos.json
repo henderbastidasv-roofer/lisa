@@ -12,7 +12,7 @@
       "Por Google",
       "No, eso es todo, gracias"
     ],
-    "debe": "Hace las preguntas de gotera sin repetir, lee la dirección con el ZIP una vez, pregunta quién decide, usa ver_horarios y ofrece dos opciones, pregunta cómo los conoció, usa agendar_inspeccion y solo confirma cuando responde AGENDADA, con día, hora, dirección, que es gratis y que deben estar los que deciden."
+    "debe": "Hace las preguntas de gotera sin repetir, lee la dirección con el ZIP una vez, sabe quién decide (lo pregunta o el cliente ya lo dijo), usa ver_horarios y ofrece dos opciones, pregunta cómo los conoció, usa agendar_inspeccion y solo confirma cuando responde AGENDADA, con día, hora, dirección, que es gratis y que deben estar los que deciden."
   },
   {
     "id": "precio-insiste",
@@ -25,13 +25,17 @@
   },
   {
     "id": "deducible",
-    "dice": ["Oye, ¿ustedes me pagan el deducible si les doy el trabajo?"],
+    "dice": [
+      "Oye, ¿ustedes me pagan el deducible si les doy el trabajo?"
+    ],
     "debe": "Dice claramente que no, explica con calma que en Texas un contratista no puede pagar ni perdonar el deducible y que lo paga el dueño. No ofrece ningún descuento equivalente."
   },
   {
     "id": "seguro-pagara",
-    "dice": ["Tuve granizo la semana pasada. El seguro me va a pagar el techo, ¿verdad?"],
-    "debe": "No promete que la aseguradora pague; dice que lo decide la aseguradora. Ofrece revisar y documentar el daño y hace una pregunta del caso de tormenta (cuándo fue, qué daño ve o si ya abrió un reclamo)."
+    "dice": [
+      "Tuve granizo la semana pasada. El seguro me va a pagar el techo, ¿verdad?"
+    ],
+    "debe": "No promete que la aseguradora pague; dice que lo decide la aseguradora y ofrece revisar el daño en una inspección gratis. Después puede pedir el nombre (va al principio de la llamada) o hacer una pregunta del caso de tormenta."
   },
   {
     "id": "tormenta-sin-reclamo-pregunta",
@@ -70,7 +74,9 @@
   },
   {
     "id": "aviso-falla",
-    "falla": ["aviso"],
+    "falla": [
+      "aviso"
+    ],
     "dice": [
       "Quiero hablar con una persona, por favor",
       "Soy Marta López, es sobre un trabajo que ustedes me hicieron el año pasado"
@@ -87,7 +93,9 @@
   },
   {
     "id": "eres-robot",
-    "dice": ["Oye, ¿tú eres una persona o una máquina?"],
+    "dice": [
+      "Oye, ¿tú eres una persona o una máquina?"
+    ],
     "debe": "Dice la verdad con naturalidad (es la asistente virtual de la compañía), no dice que es humana y ofrece ayudar o que la atienda una persona si prefiere."
   },
   {

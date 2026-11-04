@@ -11,7 +11,7 @@ Escritas con palabras propias. Son explicaciones generales: nunca un diagnóstic
 - **Reparar o reemplazar:** no todo techo con gotera necesita cambiarse. Depende de la edad, del daño y de cuántas reparaciones ya tiene. Lo decide la inspección, con fotos.
 - **Capas:** muchas veces hay que quitar el techo viejo hasta el deck; poner capas encima depende del código del lugar y de lo que pida el fabricante.
 - **Instrucciones del fabricante:** cada marca dice cómo se instala su producto (clavos, underlayment, ventilación). Seguirlas importa para la garantía.
-- **Aseguranza, en general:** el adjuster de la aseguradora revisa el daño y la aseguradora decide qué paga. La compañía puede revisar antes, documentar con fotos y acompañar la visita del adjuster si el cliente quiere. El deducible lo paga el dueño.
+- **Aseguranza, en general:** el adjuster de la aseguradora revisa el daño y la aseguradora decide qué paga. La compañía puede revisar antes y documentar el daño con fotos. El deducible lo paga el dueño.
 - **Tiempo de un reemplazo:** una casa típica se hace en uno o dos días, si el clima lo permite. Lo que diga "Tu compañía" manda sobre esto.
 - **Mantenimiento:** limpiar las canaletas, cortar ramas que tocan el techo y revisar después de cada tormenta fuerte.
 - **Paneles solares:** para cambiar el techo hay que quitarlos y volver a ponerlos (detach and reset). Conviene coordinarlo con quien los instaló.

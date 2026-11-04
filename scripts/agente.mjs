@@ -26,8 +26,8 @@ async function retell(metodo, ruta, cuerpo) {
   return texto ? JSON.parse(texto) : {};
 }
 
-// claude-4.5-haiku: en las pruebas de Sofía mantuvo la llamada en orden y en el idioma del cliente.
-const MODELO = vars.LISA_MODELO || "claude-4.5-haiku";
+// claude-5.5-haiku: en el simulador (2026-11-04) pasó 15 de 18 casos contra 9 de 18 de Haiku 4.5, y cuesta menos por minuto.
+const MODELO = vars.LISA_MODELO || "claude-5.5-haiku";
 const cerebro = {
   model_config: { type: "cascading", primary: { model: MODELO, tier: "standard" }, temperature: 0.15 },
   start_speaker: "agent",
